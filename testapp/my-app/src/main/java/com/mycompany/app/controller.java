@@ -13,17 +13,14 @@ public class controller {
     private ImageCompression imgCompress=new ImageCompression();
     private TiffGenerator imgTiffgen=new TiffGenerator();
     private testbibary resize=new testbibary();
-    private byte[] frontImage,backimage,grayimage;
+    private byte[] frontImage,backimage;
     private String uniqueID;
-    private BufferedImage forntImageBuffer,backImageFileBuffer;
-
-
+    private BufferedImage forntImageBuffer,backImageFileBuffer,grrasCaleImage;
 
 
     public controller(String unqueID,byte[] frontImage,byte[] backimage){
         this.uniqueID=unqueID;
         this.frontImage=frontImage;
-        this.grayimage=frontImage;
         this.backimage=backimage;
     }
     public controller(){
@@ -33,51 +30,47 @@ public class controller {
         createbackImage();
         createforntImage();
         createGrayImage();
+        generateTiffFile();
     }
 
     private void createGrayImage()throws IOException {
-        InputStream in = new ByteArrayInputStream(this.grayimage);
+        InputStream in = new ByteArrayInputStream(this.frontImage);
         this.forntImageBuffer = ImageIO.read(in);
-        imgCompress.StartCompress("C:\\Users\\admin\\Desktop\\frontimage.jpg","C:\\Users\\admin\\Desktop\\chequeOutput\\cmpresseimg.jpg");
+        this.grrasCaleImage=imgCompress.StartCompress(forntImageBuffer);
     }
 
     private void createforntImage() throws IOException {
-       // convert image to byte array
 
-        // write byte array to buffere image
+
         InputStream in = new ByteArrayInputStream(this.frontImage);
         this.forntImageBuffer = ImageIO.read(in);
 
-        imagBinary.setImagePath("C:\\Users\\admin\\Desktop\\frontimage.jpg","C:\\Users\\admin\\Desktop\\chequeOutput\\frontBinary.tiff");
-        imagBinary.BinaryCompress();
+        imagBinary.setImageBinary(this.forntImageBuffer);
+        this.forntImageBuffer= imagBinary.BinaryCompresstion();
     }
     private void createbackImage() throws IOException {
-        //converto image to byet array
 
         //write byte array to buffere image
         InputStream in = new ByteArrayInputStream(this.backimage);
         this.backImageFileBuffer = ImageIO.read(in);
 
-        imagBinary.setImagePath("C:\\Users\\admin\\Desktop\\backimage.jpg","C:\\Users\\admin\\Desktop\\chequeOutput\\backbinary.tiff");
-        imagBinary.BinaryCompress();
+        imagBinary.setImageBinary(this.backImageFileBuffer);
+        this.backImageFileBuffer=imagBinary.BinaryCompresstion();
     }
 
     public void generateTiffFile() throws IOException {
-        resize.generateTiFFFile();
+        imgTiffgen.generateTiFFFile(this.uniqueID,this.forntImageBuffer,this.backImageFileBuffer,this.grrasCaleImage);
 
     }
     public void StartController() throws IOException {
 
-        imgCompress.StartCompress("C:\\Users\\admin\\Desktop\\frontimage.jpg","C:\\Users\\admin\\Desktop\\chequeOutput\\cmpresseimg.jpg");
-        imagBinary.setImagePath("C:\\Users\\admin\\Desktop\\frontimage.jpg","C:\\Users\\admin\\Desktop\\chequeOutput\\frontBinary.tiff");
+        imgCompress.StartCompress("C:\\Users\\admin\\Desktop\\frontimage.jpg","C:\\Users\\admin\\Desktop\\chequeOutput\\cmpresseimg.tiff");
+        imagBinary.setImageBinary("C:\\Users\\admin\\Desktop\\frontimage.jpg","C:\\Users\\admin\\Desktop\\chequeOutput\\frontBinary.tiff");
         imagBinary.BinaryCompress();
-        imagBinary.setImagePath("C:\\Users\\admin\\Desktop\\backimage.jpg","C:\\Users\\admin\\Desktop\\chequeOutput\\backbinary.tiff");
+        imagBinary.setImageBinary("C:\\Users\\admin\\Desktop\\backimage.jpg","C:\\Users\\admin\\Desktop\\chequeOutput\\backbinary.tiff");
         imagBinary.BinaryCompress();
-        resize.convertTIFF();
-        resize.generateTiFFFile();
+        imgTiffgen.generateTiFFFile(this.uniqueID);
 
-//        //imgTiffgen.startTiffgenerte("C:\\Users\\admin\\Desktop\\chequeOutput");
-//           // resize.testimage("","");
     }
 
 

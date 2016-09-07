@@ -16,14 +16,11 @@ public class ImageBinaralized {
     public ImageBinaralized(){
 
     }
-    public void setImagePath(String inputFilepath,String outputFilepath) throws IOException {
-
+    public void setImageBinary(String inputFilepath,String outputFilepath) throws IOException {
         File original_f = new File(inputFilepath);
         original = ImageIO.read(original_f);
         binarized = binarize(original);
         this.outFilepath=outputFilepath;
-//        File outputfile = new File(outputFilepath);
-//        ImageIO.write(binarized, "jpg", outputfile);
     }
     public BufferedImage binarize(BufferedImage original) {
         int red;
@@ -108,13 +105,34 @@ public class ImageBinaralized {
         frontBinary=  new BufferedImage(frontImage.getWidth(), frontImage.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
         frontBinary.getGraphics().drawImage(frontImage, 0, 0, null);
 
-
         TIFFEncodeParam params=   new TIFFEncodeParam();
         params.setCompression(TIFFEncodeParam.COMPRESSION_GROUP4);
         FileOutputStream os    =   new FileOutputStream(this.outFilepath);
-
-
         javax.media.jai.JAI.create("encode", frontBinary, os, "TIFF", params);
 
+    }
+
+
+
+
+    //works for byte Array
+
+    public void setImageBinary(BufferedImage frontimage) throws IOException {
+       // File original_f = new File(inputFilepath);
+        //original = ImageIO.read(original_f);
+        binarized = frontimage;
+        //this.outFilepath=outputFilepath;
+
+    }
+    public BufferedImage BinaryCompresstion() {
+        BufferedImage frontImage,frontBinary;
+        frontImage= this.binarized;
+        frontBinary=  new BufferedImage(frontImage.getWidth(), frontImage.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
+        frontBinary.getGraphics().drawImage(frontImage, 0, 0, null);
+        TIFFEncodeParam params=   new TIFFEncodeParam();
+        params.setCompression(TIFFEncodeParam.COMPRESSION_GROUP4);
+       // FileOutputStream os    =   new FileOutputStream(this.outFilepath);
+        //javax.media.jai.JAI.create("encode", frontBinary, os, "TIFF", params);
+        return frontBinary;
     }
 }

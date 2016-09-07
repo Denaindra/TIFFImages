@@ -17,38 +17,73 @@ public class TiffGenerator {
     public TiffGenerator(){
 
     }
-    public void startTiffgenerte(String fileDirectory){
-        File faxSource = new File(fileDirectory);
-        File file[] = faxSource.listFiles();
-        int numImages = file.length;
 
+    public void generateTiFFFile(String uniqeID) throws IOException {
+        String inputDir = "C:\\Users\\admin\\Desktop\\chequeOutput\\";
+        File original_f1 = new File("C:\\Users\\admin\\Desktop\\chequeOutput\\frontBinary.tiff");
+        File original_f2 = new File("C:\\Users\\admin\\Desktop\\chequeOutput\\backbinary.tiff");
+        File original_f3 = new File("C:\\Users\\admin\\Desktop\\chequeOutput\\cmpresseimg.tiff");
+        //ArrayList<File> file = new ArrayList<File>();
+        //file.add(original_f);
+        File file[]={original_f1,original_f2,original_f3};
+        int numImages = file.length;
         ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
         try {
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < numImages; i++) {
+
                 SeekableStream ss = new FileSeekableStream(file[i]);
+                //ImageDecoder decoder = getDecoder(ss);
                 ImageDecoder decoder = ImageCodec.createImageDecoder("tiff", ss, null);
-
                 int numPages = decoder.getNumPages();
-
+                System.out.print(numPages+"a*");
                 for(int j = 0; j < numPages; j++)
                 {
                     PlanarImage op = new NullOpImage(decoder.decodeAsRenderedImage(j), null, null, OpImage.OP_IO_BOUND);
+                    BufferedImage obj=ImageIO.read(file[j]);
                     images.add(op.getAsBufferedImage());
                 }
             }
             TIFFEncodeParam params = new TIFFEncodeParam();
-            OutputStream out = new FileOutputStream(fileDirectory + "\\combined.tiff");
+            OutputStream out = new FileOutputStream("C:\\Users\\admin\\Desktop\\chequeOutput\\"+uniqeID+".IMG");
             ImageEncoder encoder = ImageCodec.createImageEncoder("tiff", out, params);
             ArrayList<BufferedImage> imageList = new ArrayList<BufferedImage>();
             for (int i = 1; i < images.size(); i++) {
                 imageList.add(images.get(i));
             }
             params.setExtraImages(imageList.iterator());
-
             encoder.encode(images.get(0));
             out.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    //passing buffer images
+    public void generateTiFFFile(String uniqueID,BufferedImage forntImage,BufferedImage backImage,BufferedImage grasFrontImage) throws IOException {
+
+        ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
+        try {
+            for (int i = 0; i < 3; i++) {
+
+                for(int j = 0; j < 1; j++)
+                {
+                    images.add(forntImage);
+                    images.add(backImage);
+                    images.add(grasFrontImage);
+                }
+            }
+            TIFFEncodeParam params = new TIFFEncodeParam();
+            OutputStream out = new FileOutputStream("C:\\Users\\admin\\Desktop\\chequeOutput\\"+uniqueID+".IMG");
+            ImageEncoder encoder = ImageCodec.createImageEncoder("tiff", out, params);
+            ArrayList<BufferedImage> imageList = new ArrayList<BufferedImage>();
+            for (int i = 1; i < images.size(); i++) {
+                imageList.add(images.get(i));
+            }
+            params.setExtraImages(imageList.iterator());
+            encoder.encode(images.get(0));
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

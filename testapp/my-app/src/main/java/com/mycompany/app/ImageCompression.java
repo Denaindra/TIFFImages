@@ -24,6 +24,8 @@ public class ImageCompression  {
     }
 
     public void StartCompress(String inputFilePath,String outputFilePath)throws IOException  {
+
+
         File original_f = new File(inputFilePath);
         BufferedImage img = ImageIO.read(original_f);
         int w = img.getWidth();
@@ -34,18 +36,45 @@ public class ImageCompression  {
         g.drawImage(img, 0, 0,600, 300, 0, 0,w, h, null);
         g.dispose();
 
-//        TIFFEncodeParam params=   new TIFFEncodeParam();
-//        params.setCompression(TIFFEncodeParam.COMPRESSION_JPEG_TTN2);
-//        TIFFEncodeParam patram=new TIFFEncodeParam();
-//        FileOutputStream os=new FileOutputStream(outputFilePath);
-//        javax.media.jai.JAI.create("encode", dimg, os, "TIFF", params);
+        TIFFEncodeParam params=   new TIFFEncodeParam();
+        params.setCompression(TIFFEncodeParam.COMPRESSION_JPEG_TTN2);
+        FileOutputStream os=new FileOutputStream(outputFilePath);
+        javax.media.jai.JAI.create("encode", dimg, os, "TIFF", params);
 
-        JPEGImageWriteParam jpegParams = new JPEGImageWriteParam(null);
-        jpegParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        jpegParams.setCompressionQuality(0.5f);
+//        JPEGImageWriteParam jpegParams = new JPEGImageWriteParam(null);
+//        jpegParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+//        jpegParams.setCompressionQuality(0.5f);
+//
+//        final ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
+//        writer.setOutput(new FileImageOutputStream(new File(outputFilePath)));
+//        writer.write(null, new IIOImage(dimg, null, null), jpegParams);
+    }
 
-        final ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
-        writer.setOutput(new FileImageOutputStream(new File(outputFilePath)));
-        writer.write(null, new IIOImage(dimg, null, null), jpegParams);
+    public BufferedImage StartCompress(BufferedImage forntImage)throws IOException  {
+
+
+        //File original_f = new File(inputFilePath);
+        BufferedImage img = forntImage;
+        int w = img.getWidth();
+        int h = img.getHeight();
+        BufferedImage dimg = new BufferedImage(600,300,BufferedImage.TYPE_BYTE_GRAY);
+        Graphics2D g = dimg.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.drawImage(img, 0, 0,600, 300, 0, 0,w, h, null);
+        g.dispose();
+
+        TIFFEncodeParam params=   new TIFFEncodeParam();
+        params.setCompression(TIFFEncodeParam.COMPRESSION_JPEG_TTN2);
+        TIFFEncodeParam patram=new TIFFEncodeParam();
+       // FileOutputStream os=new FileOutputStream(outputFilePath);
+        //javax.media.jai.JAI.create("encode", dimg, os, "TIFF", params);
+        return dimg;
+//        JPEGImageWriteParam jpegParams = new JPEGImageWriteParam(null);
+//        jpegParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+//        jpegParams.setCompressionQuality(0.5f);
+//
+//        final ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
+//        writer.setOutput(new FileImageOutputStream(new File(outputFilePath)));
+//        writer.write(null, new IIOImage(dimg, null, null), jpegParams);
     }
 }
