@@ -1,0 +1,6 @@
+com\mycompany\app\App.class
+com\mycompany\app\controller.class
+com\mycompany\app\ImageBinaralized.class
+com\mycompany\app\ImageCompression.class
+com\mycompany\app\TiffGenerator.class
+com\mycompany\app\testbibary.class
